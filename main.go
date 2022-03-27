@@ -6,7 +6,7 @@ func main() {
 	r := gin.Default()
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"message": "asdasdasdasdads？？？？123231123",
+			"message": "怎么部署成功了草",
 		})
 	})
 	r.Run() // 监听并在 0.0.0.0:8080 上启动服务
