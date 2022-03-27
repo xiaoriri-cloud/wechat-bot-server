@@ -19,7 +19,7 @@ FROM alpine
 WORKDIR /app
 
 # 将上一个阶段publish文件夹下的所有文件复制进来
-COPY --from=builder /app/wechat-bot-server .
+COPY --from=builder /app .
 
 # 指定运行时环境变量
 #ENV GIN_MODE=release \
