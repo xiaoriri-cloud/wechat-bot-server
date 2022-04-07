@@ -16,6 +16,7 @@ func GetUser(c *gin.Context) {
 			"code":    400,
 			"data":    nil,
 		})
+		return
 	}
 
 	if isExist {
