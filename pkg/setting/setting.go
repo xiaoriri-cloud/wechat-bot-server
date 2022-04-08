@@ -23,6 +23,7 @@ func Setup() {
 
 	configData, err := ioutil.ReadFile("config/app.yaml")
 	if err != nil {
+		configData = []byte(GetConfig("wechat-bot-server","DEFAULT_GROUP"))
 		log.Fatalln("读取配置文件错误：" + err.Error())
 	}
 	err = yaml.Unmarshal(configData, AppConfig)
