@@ -16,6 +16,10 @@ RUN  go build .
 # 运行阶段指定scratch作为基础镜像
 FROM alpine
 
+RUN apk add tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && echo "Asia/Shanghai" > /etc/timezone \
+    && apk del tzdata
+
 WORKDIR /app
 
 # 将上一个阶段publish文件夹下的所有文件复制进来
