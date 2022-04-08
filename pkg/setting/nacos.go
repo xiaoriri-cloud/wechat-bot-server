@@ -7,7 +7,6 @@ import (
 	"gopkg.in/yaml.v2"
 	"log"
 	"os"
-	"wechat-bot-server/models"
 )
 
 func GetConfig(dataId string, group string) string {
@@ -38,7 +37,6 @@ func GetConfig(dataId string, group string) string {
 			if err != nil {
 				log.Fatalln("配置文件解析错误：" + err.Error())
 			}
-			models.Setup()
 			log.Println("ListenConfig group:" + group + ", dataId:" + dataId + ", data:" + data)
 		},
 	})
