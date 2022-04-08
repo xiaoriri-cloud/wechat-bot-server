@@ -5,7 +5,10 @@ import (
 	"github.com/nacos-group/nacos-sdk-go/clients"
 	"github.com/nacos-group/nacos-sdk-go/common/constant"
 	"github.com/nacos-group/nacos-sdk-go/vo"
+	"gopkg.in/yaml.v2"
+	"log"
 	"os"
+	"wechat-bot-server/models"
 )
 
 func GetConfig(dataId string, group string) string {
@@ -13,10 +16,6 @@ func GetConfig(dataId string, group string) string {
 	var namespaceId = os.Getenv("aliyun-namespaceId")
 	var accessKey = os.Getenv("aliyun-accessKey")
 	var secretKey = os.Getenv("aliyun-secretKey")
-
-	fmt.Println(fmt.Sprintf("namespaceId：%s", namespaceId))
-	fmt.Println(fmt.Sprintf("accessKey：%s", accessKey))
-	fmt.Println(fmt.Sprintf("secretKey：%s", secretKey))
 
 	clientConfig := constant.ClientConfig{
 		Endpoint:       endpoint + ":8080",
@@ -30,6 +29,20 @@ func GetConfig(dataId string, group string) string {
 	// Initialize client.
 	configClient, _ := clients.CreateConfigClient(map[string]interface{}{
 		"clientConfig": clientConfig,
+	})
+
+	// 监听配置
+	configClient.ListenConfig(vo.ConfigParam{
+		DataId: dataId,
+		Group:  group,
+		OnChange: func(namespace, group, dataId, data string) {
+			err := yaml.Unmarshal([]byte(data), AppConfig)
+			if err != nil {
+				log.Fatalln("配置文件解析错误：" + err.Error())
+			}
+			models.Setup()
+			fmt.Println("ListenConfig group:" + group + ", dataId:" + dataId + ", data:" + data)
+		},
 	})
 
 	// Get plain content from ACM.
