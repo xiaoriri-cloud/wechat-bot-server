@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"io"
 	"io/ioutil"
 	"log"
 	"math/rand"
@@ -45,7 +46,12 @@ func InitRouter() *gin.Engine {
 		//req.Header.Add("X-Forwarded-For", genIpaddr())
 		resp, _ := client.Do(req)
 		if resp != nil {
-			defer resp.Body.Close()
+			defer func(Body io.ReadCloser) {
+				err := Body.Close()
+				if err != nil {
+					log.Println("defer 报错：" + err.Error())
+				}
+			}(resp.Body)
 		}
 		body, _ := ioutil.ReadAll(resp.Body)
 		var isTrue = strings.Contains(string(body), "投票成功")
