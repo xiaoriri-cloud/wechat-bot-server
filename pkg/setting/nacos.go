@@ -1,7 +1,6 @@
 package setting
 
 import (
-	"fmt"
 	"github.com/nacos-group/nacos-sdk-go/clients"
 	"github.com/nacos-group/nacos-sdk-go/common/constant"
 	"github.com/nacos-group/nacos-sdk-go/vo"
@@ -32,7 +31,7 @@ func GetConfig(dataId string, group string) string {
 	})
 
 	// 监听配置
-	configClient.ListenConfig(vo.ConfigParam{
+	err := configClient.ListenConfig(vo.ConfigParam{
 		DataId: dataId,
 		Group:  group,
 		OnChange: func(namespace, group, dataId, data string) {
@@ -41,9 +40,12 @@ func GetConfig(dataId string, group string) string {
 				log.Fatalln("配置文件解析错误：" + err.Error())
 			}
 			models.Setup()
-			fmt.Println("ListenConfig group:" + group + ", dataId:" + dataId + ", data:" + data)
+			log.Println("ListenConfig group:" + group + ", dataId:" + dataId + ", data:" + data)
 		},
 	})
+	if err != nil {
+		log.Println("配置中心监听错误：" + err.Error())
+	}
 
 	// Get plain content from ACM.
 	content, _ := configClient.GetConfig(vo.ConfigParam{

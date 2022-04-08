@@ -25,7 +25,7 @@ func InitRouter() *gin.Engine {
 	r.GET("/vote", func(context *gin.Context) {
 
 		proxyAddr := getProxyAddr()
-		fmt.Println(proxyAddr)
+		log.Println("神龙代理IP：" + proxyAddr)
 		proxy, err := url.Parse(proxyAddr)
 		if err != nil {
 			log.Fatal(err)
