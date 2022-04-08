@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
+	"log"
 	"math/rand"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -22,15 +24,15 @@ func InitRouter() *gin.Engine {
 	apiv1.GET("/userinfo", v1.GetUser)
 	r.GET("/vote", func(context *gin.Context) {
 
-		//proxyAddr := getProxyAddr()
-		//log.Println("神龙代理IP：" + proxyAddr)
-		//proxy, err := url.Parse(proxyAddr)
-		//if err != nil {
-		//	log.Fatal(err)
-		//}
+		proxyAddr := getProxyAddr()
+		log.Println("神龙代理IP：" + proxyAddr)
+		proxy, err := url.Parse(proxyAddr)
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		netTransport := &http.Transport{
-			//Proxy:                 http.ProxyURL(proxy),
+			Proxy:                 http.ProxyURL(proxy),
 			MaxIdleConnsPerHost:   10,
 			ResponseHeaderTimeout: time.Second * time.Duration(5),
 		}
@@ -40,7 +42,7 @@ func InitRouter() *gin.Engine {
 			Transport: netTransport,
 		}
 		req, _ := http.NewRequest("GET", "http://nbd332.wh.changqingmall.cn/Home/index.php?m=Index&a=vote&vid=610717&id=12231&tp=", nil)
-		req.Header.Add("X-Forwarded-For", genIpaddr())
+		//req.Header.Add("X-Forwarded-For", genIpaddr())
 		resp, _ := client.Do(req)
 		if resp != nil {
 			defer resp.Body.Close()
@@ -80,7 +82,7 @@ type ProxyResponse struct {
 }
 
 func getProxyAddr() string {
-	resp, _ := http.Get("http://api.shenlongip.com/ip?key=ddkhq2bi&pattern=json&count=1&need=1000&protocol=1")
+	resp, _ := http.Get("http://api.shenlongip.com/ip?key=lwyxsn7l&pattern=json&count=1&need=1000&protocol=1")
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
 	var proxy = &ProxyResponse{}
