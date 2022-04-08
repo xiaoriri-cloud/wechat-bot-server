@@ -22,7 +22,6 @@ func GetConfig(dataId string, group string) string {
 		AccessKey:      accessKey,
 		SecretKey:      secretKey,
 		TimeoutMs:      5 * 1000,
-		ListenInterval: 30 * 1000,
 	}
 
 	// Initialize client.
