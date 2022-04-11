@@ -170,14 +170,14 @@ func getToken() string {
 }
 
 type SendMsg struct {
-	ChatId string `json:"chat_id"`
-	Text   string `json:"text"`
+	ChatId    string `json:"chat_id"`
+	Text      string `json:"text"`
 	ParseMode string `json:"parse_mode"`
 }
 
 func SendMessage(msgContent SendMsg) {
 	url := "https://api.telegram.org/bot" + getToken() + "/sendMessage"
-	params ,_ :=json.Marshal(msgContent)
+	params, _ := json.Marshal(msgContent)
 	log.Println(msgContent)
 	resp, _ := http.Post(url, binding.MIMEJSON, bytes.NewBuffer(params))
 	defer resp.Body.Close()
