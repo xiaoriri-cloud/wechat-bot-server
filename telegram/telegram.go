@@ -1,8 +1,11 @@
 package telegram
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -164,4 +167,20 @@ func GetUpdates() TgResponse {
 func getToken() string {
 	config, _ := models.GetConfig("bot-q-token")
 	return config.Config
+}
+
+type SendMsg struct {
+	ChatId string `json:"chat_id"`
+	Text   string `json:"text"`
+	ParseMode string `json:"parse_mode"`
+}
+
+func SendMessage(msgContent SendMsg) {
+	url := "https://api.telegram.org/bot" + getToken() + "/sendMessage"
+	params ,_ :=json.Marshal(msgContent)
+	log.Println(msgContent)
+	resp, _ := http.Post(url, binding.MIMEJSON, bytes.NewBuffer(params))
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	fmt.Println(string(body))
 }
