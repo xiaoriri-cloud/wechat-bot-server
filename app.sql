@@ -13,3 +13,11 @@ CREATE TABLE `bot_user_info`
     `gender`     varchar(100) DEFAULT '' COMMENT '性别',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='微信用户';
+
+
+CREATE TABLE `bot_config`
+(
+    `name`   varchar(255) NOT NULL,
+    `config` text         NOT NULL,
+    UNIQUE KEY `name` (`name`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='全局配置表';
