@@ -2,17 +2,17 @@ package routers
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"io"
 	"io/ioutil"
 	"log"
-	"math/rand"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
 	v1 "wechat-bot-server/routers/api/v1"
+	"wechat-bot-server/telegram"
 )
 
 func InitRouter() *gin.Engine {
@@ -22,14 +22,14 @@ func InitRouter() *gin.Engine {
 	apiv1 := r.Group("/api/v1")
 
 	apiv1.GET("/userinfo", v1.GetUser)
-	r.GET("/vote", func(context *gin.Context) {
+	appPath, _ := os.Getwd()
+	r.StaticFS("/telegram", http.Dir(appPath+"/telegram/views"))
 
-		//proxyAddr := getProxyAddr()
-		//log.Println("神龙代理IP：" + proxyAddr)
-		//proxy, err := url.Parse(proxyAddr)
-		//if err != nil {
-		//	log.Fatal(err)
-		//}
+	telegramR := r.Group("/tg/")
+	telegramR.GET("/token",telegram.GetToken)
+	telegramR.POST("/token",telegram.SetToken)
+
+	r.GET("/vote", func(context *gin.Context) {
 
 		netTransport := &http.Transport{
 			//Proxy:                 http.ProxyURL(proxy),
@@ -42,7 +42,6 @@ func InitRouter() *gin.Engine {
 			Transport: netTransport,
 		}
 		req, _ := http.NewRequest("GET", "http://nbd332.wh.changqingmall.cn/Home/index.php?m=Index&a=vote&vid=610717&id=12231&tp=", nil)
-		req.Header.Add("X-Forwarded-For", genIpaddr())
 		resp, _ := client.Do(req)
 		if resp != nil {
 			defer func(Body io.ReadCloser) {
@@ -71,11 +70,6 @@ func InitRouter() *gin.Engine {
 	})
 	apiv1.POST("/userinfo", v1.AddUser)
 	return r
-}
-func genIpaddr() string {
-	rand.Seed(time.Now().Unix())
-	ip := fmt.Sprintf("%d.%d.%d.%d", rand.Intn(255), rand.Intn(255), rand.Intn(255), rand.Intn(255))
-	return ip
 }
 
 type ProxyResponse struct {

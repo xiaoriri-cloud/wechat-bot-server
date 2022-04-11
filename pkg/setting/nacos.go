@@ -4,8 +4,6 @@ import (
 	"github.com/nacos-group/nacos-sdk-go/clients"
 	"github.com/nacos-group/nacos-sdk-go/common/constant"
 	"github.com/nacos-group/nacos-sdk-go/vo"
-	"gopkg.in/yaml.v2"
-	"log"
 	"os"
 )
 
@@ -29,20 +27,20 @@ func GetConfig(dataId string, group string) string {
 	})
 
 	// 监听配置
-	err := configClient.ListenConfig(vo.ConfigParam{
-		DataId: dataId,
-		Group:  group,
-		OnChange: func(namespace, group, dataId, data string) {
-			err := yaml.Unmarshal([]byte(data), AppConfig)
-			if err != nil {
-				log.Fatalln("配置文件解析错误：" + err.Error())
-			}
-			log.Println("ListenConfig group:" + group + ", dataId:" + dataId + ", data:" + data)
-		},
-	})
-	if err != nil {
-		log.Println("配置中心监听错误：" + err.Error())
-	}
+	//err := configClient.ListenConfig(vo.ConfigParam{
+	//	DataId: dataId,
+	//	Group:  group,
+	//	OnChange: func(namespace, group, dataId, data string) {
+	//		err := yaml.Unmarshal([]byte(data), AppConfig)
+	//		if err != nil {
+	//			log.Fatalln("配置文件解析错误：" + err.Error())
+	//		}
+	//		log.Println("ListenConfig group:" + group + ", dataId:" + dataId + ", data:" + data)
+	//	},
+	//})
+	//if err != nil {
+	//	log.Println("配置中心监听错误：" + err.Error())
+	//}
 
 	// Get plain content from ACM.
 	content, _ := configClient.GetConfig(vo.ConfigParam{
