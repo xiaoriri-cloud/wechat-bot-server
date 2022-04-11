@@ -26,8 +26,12 @@ func InitRouter() *gin.Engine {
 	r.StaticFS("/telegram", http.Dir(appPath+"/telegram/views"))
 
 	telegramR := r.Group("/tg/")
-	telegramR.GET("/token",telegram.GetToken)
-	telegramR.POST("/token",telegram.SetToken)
+	telegramR.GET("/config", telegram.GetConfig)
+	telegramR.POST("/config", telegram.SetConfig)
+	telegramR.GET("/getUpdates", func(c *gin.Context) {
+		res := telegram.GetUpdates()
+		c.JSON(200, res)
+	})
 
 	r.GET("/vote", func(context *gin.Context) {
 
