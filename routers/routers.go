@@ -73,6 +73,7 @@ func InitRouter() *gin.Engine {
 		}
 	})
 	apiv1.POST("/userinfo", v1.AddUser)
+	r.GET("api/getwalls", v1.PageWallpaper)
 	return r
 }
 
