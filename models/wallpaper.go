@@ -22,7 +22,7 @@ func PageWallpaper(page, step int) ([]Wallpaper, error) {
 	rand.Seed(time.Now().UnixNano())
 	id := rand.Int63n(count)
 
-	db.Limit(10).Where("id >= ?", id).Find(&Wallpapers)
+	db.Limit(20).Where("id >= ?", id).Find(&Wallpapers)
 
 	return Wallpapers, nil
 }
