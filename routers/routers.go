@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"wechat-bot-server/models"
 	v1 "wechat-bot-server/routers/api/v1"
 	"wechat-bot-server/telegram"
 )
@@ -33,7 +34,26 @@ func InitRouter() *gin.Engine {
 		c.JSON(200, res)
 	})
 
-	r.GET("/vote", func(context *gin.Context) {
+	r.POST("/haier/create", func(c *gin.Context) {
+		var haierinfoDto models.HaierInfo
+		c.BindJSON(&haierinfoDto)
+		err := models.AddHaierInfo(haierinfoDto)
+		if err != nil {
+			log.Printf("插入数据错误：%v", err)
+			c.JSON(200, gin.H{
+				"message": "服务器错误",
+				"code":    401,
+				"data":    nil,
+			})
+		}
+		c.JSON(200, gin.H{
+			"message": "ok",
+			"code":    200,
+			"data":    "创建成功",
+		})
+	})
+
+		r.GET("/vote", func(context *gin.Context) {
 
 		netTransport := &http.Transport{
 			//Proxy:                 http.ProxyURL(proxy),

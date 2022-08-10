@@ -2,9 +2,9 @@
 
 #数据库配置
 database:
-  user: root
-  password: a123456
-  host: 127.0.0.1
+  user: wx_bot
+  password: Pir2eCKKjL7S6s6t
+  host: 42.193.120.189
   name: wx_bot
   port: 3306
   table_prefix: bot_
